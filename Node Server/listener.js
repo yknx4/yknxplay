@@ -80,4 +80,7 @@ MongoClient.connect("mongodb://192.168.56.101:27017/test", function(err, db) {
   if(!err) {
     console.log("We are connected");
   }
+    else
+    {
+        console.log( err);}
 });
