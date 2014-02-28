@@ -4,6 +4,8 @@ var vars = require("./global_var");
 var server = dgram.createSocket("udp4");
 var fs = require('fs');
 var crypto = require('crypto');
+var MongoClient = require('mongodb').MongoClient;
+
 
 var crlf = new Buffer(2);
 crlf[0] = 0xD; //CR - Carriage return character
@@ -73,3 +75,9 @@ server.on("listening", function () {
 
 server.bind(6000);
 // server listening 10.0.0.13:6000
+// Connect to the db
+MongoClient.connect("mongodb://192.168.56.101:27017/test", function(err, db) {
+  if(!err) {
+    console.log("We are connected");
+  }
+});
