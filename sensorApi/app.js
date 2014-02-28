@@ -2,12 +2,16 @@
 /**
  * Module dependencies.
  */
-
+var vars = require("./global_var");
+exports.globar_vars =vars;
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var sensor_data = require('./routes/sensor_data');
+var mongoose = require('mongoose');
+mongoose.connect("mongodb://192.168.56.101:27017/"  + vars.dbName);
 
 var app = express();
 
@@ -30,6 +34,7 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+app.get('/sensor_data', sensor_data.index);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
