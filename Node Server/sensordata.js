@@ -14,13 +14,13 @@ this.newSensorData = function(date,sensorValues)
 	return result;
 }
 this.getSensorDataFromMsg = function(msg){
-	var date = new Date();
+
 	var sensor_data = new Array();
 	var full_msg = String(msg);
 	for(var i =0;i<vars.noOfSensors;i++){
 		var sensor_msg = full_msg.substring(1+vars.msgSize*i,vars.msgSize+vars.msgSize*i);
 		sensor_data[i]=sensor_msg;
 	}
-	var result = this.newSensorData(date.getTime(),sensor_data);
+	var result = this.newSensorData(new Date(),sensor_data);
 	return result;
 }
