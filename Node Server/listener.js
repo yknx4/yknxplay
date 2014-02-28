@@ -83,6 +83,7 @@ MongoClient.connect("mongodb://192.168.56.101:27017/test", function(err, db) {
     else
     {
         console.log( err);}
-});
 db.collection('test', function(err, collection) {});
+});
+
 

@@ -10,7 +10,7 @@
 #include <unistd.h> //sleep()
 #include <openssl/md5.h>
  
-#define SERVER "127.0.0.1"
+#define SERVER "192.168.56.1"
 #define BUFLEN 512  //Max length of buffer
 #define PORT 6000   //The port on which to send data
 #define NUMBER_OF_SENSORS 3
