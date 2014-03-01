@@ -91,7 +91,8 @@ server.on("listening", function () {
 server.bind(6000);
 // server listening 10.0.0.13:6000
 // Connect to the db
-MongoClient.connect("mongodb://192.168.56.101:27017/" + vars.dbName, function (err, db) {
+//MongoClient.connect("mongodb://192.168.56.101:27017/" + vars.dbName, function (err, db) {
+MongoClient.connect("mongodb://yknx4:konami1994@widmore.mongohq.com:10000/ucol_wflow", function (err, db) {
     if (!err) {
         console.log("We are connected");
     } else {
