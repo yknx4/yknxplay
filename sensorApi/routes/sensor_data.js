@@ -110,3 +110,28 @@ exports.showByMonth = function (req, res) {
         }
     });
 }
+exports.showByHourRange = function (req, res) {
+
+    var lower_hour = req.params.low;
+    var bigger_hour = req.params.high;
+    var low = new Date(date.getFullYear(), date.getMonth(), date.getDay(), lower_hour, 0, 0);
+    var high = new Date(date.getFullYear(), date.getMonth(), date.getDay(), bigger_hour, 59, 59);
+    //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
+    console.log("Query between " + low + " and " + high);
+    sensorData.find({
+        date: {
+            $gte: low,
+            $lt: high
+        }
+    }, function (err, docs) {
+        if (!err) {
+            res.json(200, {
+                sensordata: docs
+            });
+        } else {
+            res.json(500, {
+                message: err
+            });
+        }
+    });
+}

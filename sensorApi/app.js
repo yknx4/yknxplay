@@ -38,7 +38,7 @@ app.get('/sensor_data/:id', sensor_data.show);
 app.get('/sensor_data/full_date/:low/:high', sensor_data.showByDateRange);
 app.get('/sensor_data/month/:month', sensor_data.showByMonth);
 app.get('/sensor_data/day/:day', sensor_data.showByDay);
-app.get('/sensor_data/hour_range/:low/:high', sensor_data.showByDateRange);
+app.get('/sensor_data/hour_range/:low/:high', sensor_data.showByHourRange);
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
