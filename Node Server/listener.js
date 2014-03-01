@@ -13,6 +13,24 @@ var crlf = new Buffer(2);
 crlf[0] = 0xD; //CR - Carriage return character
 crlf[1] = 0xA; //LF - Line feed character
 
+function connectDB() {
+    MongoClient.connect("mongodb://yknx4:konami1994@widmore.mongohq.com:10000/ucol_wflow", function (err, db) {
+        if (!err) {
+            console.log("We are connected");
+        } else {
+
+            console.log(err);
+        }
+
+
+        global_db = db;
+        db.collection(vars.collectionName, function (err, collection) {});
+
+
+    });
+
+}
+
 function getDateTime() {
 
     var date = new Date();
@@ -87,25 +105,12 @@ server.on("listening", function () {
         address.address + ":" + address.port);
 
 });
-
+connectDB();
 server.bind(6000);
 // server listening 10.0.0.13:6000
 // Connect to the db
 //MongoClient.connect("mongodb://192.168.56.101:27017/" + vars.dbName, function (err, db) {
-MongoClient.connect("mongodb://yknx4:konami1994@widmore.mongohq.com:10000/ucol_wflow", function (err, db) {
-    if (!err) {
-        console.log("We are connected");
-    } else {
 
-        console.log(err);
-    }
-
-
-    global_db = db;
-    db.collection(vars.collectionName, function (err, collection) {});
-
-
-});
 
 /* db.ensureIndex('more_complex_ensure_index_test', {a:1, b:1}
         , {unique:true, background:true, dropDups:true, w:1}, function(err, indexName) {

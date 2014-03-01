@@ -10,7 +10,9 @@ var http = require('http');
 var path = require('path');
 var sensor_data = require('./routes/sensor_data');
 var mongoose = require('mongoose');
-mongoose.connect("mongodb://192.168.56.101:27017/" + vars.dbName);
+//"mongodb://yknx4:konami1994@widmore.mongohq.com:10000/ucol_wflow"
+//mongoose.connect("mongodb://192.168.56.101:27017/" + vars.dbName);
+mongoose.connect("mongodb://yknx4:konami1994@widmore.mongohq.com:10000/ucol_wflow");
 
 var app = express();
 
