@@ -153,7 +153,7 @@ exports.create = function (req, res) {
         newSensorData.save(function (err) {
 
             if (!err) {
-                fs.appendFile("mydata.txt", dateHelper.getDateTime() + full_msg + crlf, encoding = 'utf8', function (err) {}); //write the value to file and add CRLF for line break
+                //fs.appendFile("mydata.txt", dateHelper.getDateTime() + full_msg + crlf, encoding = 'utf8', function (err) {}); //write the value to file and add CRLF for line break
                 res.json(201, {
                     message: "sensorData created on: " +
                         newSensorData.date
