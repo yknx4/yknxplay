@@ -95,8 +95,8 @@ exports.showByMonth = function (req, res) {
     var date = new Date();
     var month = req.params.month;
     month--;
-    var low = new Date(date.getFullYear(), month, date.getDay(), 0, 0, 0);
-    var high = new Date(date.getFullYear(), month, date.getDay(), 23, 59, 59);
+    var low = new Date(date.getFullYear(), month, 1, 0, 0, 0);
+    var high = new Date(date.getFullYear(), month + 1, 1, 0, 0, 0);
     //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
     console.log("Query between " + low + " and " + high);
     sensorData.find({
