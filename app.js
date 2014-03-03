@@ -49,7 +49,7 @@ app.get('/', function (req, res) {
         title: 'JSON Api for Water Flow data',
         description: 'this is a description',
         javascripts: ["javascripts/script.js", "javascripts/bootstrap.js"],
-        stylesheets: ["bootstrap.css", "bootstrap-theme.css"]
+        stylesheets: ["bootstrap.css", "bootstrap-theme.css", "sb-admin.css"]
     });
 });
 
