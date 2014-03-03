@@ -2,34 +2,17 @@ var dgram = require("dgram");
 var sensorData = require("./sensordata");
 var vars = require("../global_var");
 var server = dgram.createSocket("udp4");
-var fs = require('fs');
+var http = require('http');
 var crypto = require('crypto');
-var MongoClient = require('mongodb').MongoClient;
-var global_db;
-var global_collection;
+var fs = require('fs');
+
 
 
 var crlf = new Buffer(2);
 crlf[0] = 0xD; //CR - Carriage return character
 crlf[1] = 0xA; //LF - Line feed character
 
-function connectDB() {
-    MongoClient.connect("mongodb://" + vars.dbServer + ":" + vars.dbPort + "/" + vars.dbName, function (err, db) {
-        if (!err) {
-            console.log("We are connected");
-        } else {
 
-            console.log(err);
-        }
-
-
-        global_db = db;
-        db.collection(vars.collectionName, function (err, collection) {});
-
-
-    });
-
-}
 
 function getDateTime() {
 
@@ -73,28 +56,34 @@ exports.startUDPServer = function () {
         var string2hash = vars.secret_word + sensors_msg;
         var local_hash = crypto.createHash('md5').update(string2hash).digest('hex');
         local_hash = local_hash.substring(0, vars.hash_size);
-        console.log("Local hash (md5): " + local_hash);
-        if (local_hash == hash) {
-            console.log("Valid Data!");
-            var data = sensorData.getSensorDataFromMsg(sensors_msg);
-            data.print();
-            global_db.collection(vars.collectionName).insert(data, {
-                w: 1
-            }, function (err, result) {
-                //console.log(err+ " on "+result);
-            });
-            global_db.ensureIndex(vars.collectionName, {
-                date: 1
-            }, {
-                background: true
-            }, function (err, indexName) {
-                //console.log(err+ " on "+indexName);
+
+        var data = sensorData.getSensorDataFromMsg(sensors_msg);
+        data.print();
+
+        //The url we want is: 'www.random.org/integers/?num=1&min=1&max=10&col=1&base=10&format=plain&rnd=new'
+        var options = {
+            host: '127.0.0.1',
+            port: '3000',
+            path: '/sensor_data/create/' + full_msg
+        };
+
+        callback = function (response) {
+            var str = '';
+
+            //another chunk of data has been recieved, so append it to `str`
+            response.on('data', function (chunk) {
+                str += chunk;
             });
 
-        } else {
-            console.log("Invalid Data!");
+            //the whole response has been recieved, so we just print it out here
+            response.on('end', function () {
+                console.log(str);
+            });
         }
-        fs.appendFile("mydata.txt", getDateTime() + msg + crlf, encoding = 'utf8', function (err) {}); //write the value to file and add CRLF for line break
+
+        http.request(options, callback).end();
+
+        fs.appendFile("requests.txt", getDateTime() + msg + crlf, encoding = 'utf8', function (err) {}); //write the value to file and add CRLF for line break
 
     });
 
@@ -105,7 +94,6 @@ exports.startUDPServer = function () {
             address.address + ":" + address.port);
 
     });
-    connectDB();
     server.bind(6000);
 }
 // server listening 10.0.0.13:6000

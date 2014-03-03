@@ -11,6 +11,8 @@ var path = require('path');
 var sensor_data = require('./routes/sensor_data');
 var mongoose = require('mongoose');
 var udpServer = require("./udpServer/listener");
+
+
 //"mongodb://yknx4:konami1994@widmore.mongohq.com:10000/ucol_wflow"
 //mongoose.connect("mongodb://192.168.56.101:27017/" + vars.dbName);
 mongoose.connect("mongodb://" + vars.dbServer + ":" + vars.dbPort + "/" + vars.dbName);
@@ -37,6 +39,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/sensor_data', sensor_data.index);
+app.get('/sensor_data/create/:msg', sensor_data.create);
 app.get('/sensor_data/:id', sensor_data.show);
 app.get('/sensor_data/from_date/:low/to_date/:high', sensor_data.showByDateRange);
 app.get('/sensor_data/month/:month', sensor_data.showByMonth);

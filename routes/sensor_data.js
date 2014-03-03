@@ -1,5 +1,11 @@
 var sensorData = require('../models/sensorData').SensorData;
+var sensorDataHelper = require('../helpers/sensorData');
 var dateHelper = require('../helpers/date');
+var fs = require('fs');
+
+var crlf = new Buffer(2);
+crlf[0] = 0xD; //CR - Carriage return character
+crlf[1] = 0xA; //LF - Line feed character
 
 exports.index = function (req, res) {
     sensorData.find({}, function (err, docs) {
@@ -134,4 +140,38 @@ exports.showByHourRange = function (req, res) {
             });
         }
     });
+}
+exports.create = function (req, res) {
+
+    var full_msg = req.params.msg
+    console.log("Input requested with following string: " + full_msg);
+    if (sensorDataHelper.validate(full_msg)) {
+        console.log("Valid Data");
+        var newSensorData = sensorDataHelper.getSensorDataFromMsg(full_msg);
+
+
+        newSensorData.save(function (err) {
+
+            if (!err) {
+                fs.appendFile("mydata.txt", dateHelper.getDateTime() + full_msg + crlf, encoding = 'utf8', function (err) {}); //write the value to file and add CRLF for line break
+                res.json(201, {
+                    message: "sensorData created on: " +
+                        newSensorData.date
+                });
+            } else {
+                res.json(500, {
+                    message: "Could not create sensorData.Error: " + err
+                });
+            }
+
+        });
+
+
+
+    } else {
+        console.log("Inalid Data");
+        res.json(500, {
+            message: "Could not create sensorData: Invalid input string"
+        });
+    }
 }
