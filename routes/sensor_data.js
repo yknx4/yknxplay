@@ -29,9 +29,22 @@ function getDateRange(low, high, res) {
     });
 }
 
+function newDayData(nDate, day) {
+    var result = new Object();
+    result.date = new Date(nDate.getFullYear(), nDate.getMonth(), day, 0, 0, 0);
+    result.count = 0;
+    result.sensorValues = new Array();
+    return result;
+}
+
+
+
 function getMonthParsed(low, high, res) {
     console.log("Query between " + low + " and " + high);
     var deeto = new Date();
+    /*Temporal Data*/
+    var daysData = new Array();
+    var totalSensors = new Array();
     var newSensorData = {
         date: new Date(),
         count: 0,
@@ -39,13 +52,20 @@ function getMonthParsed(low, high, res) {
         days: new Array()
     };
 
-    var totalSensors = new Array();
+    /*Array Initialization*/
     for (var i = 0; i < vars.noOfSensors; i++) {
         totalSensors[i] = 0;
     }
-
-
-    //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
+    for (var day = 0; day < high.getDate(); day++) {
+        // console.log(day + " dafack");
+        var tmpDay = newDayData(low, day + 1);
+        daysData[day] = tmpDay;
+        //console.log(daysData[day].date);
+        for (var i = 0; i < vars.noOfSensors; i++) {
+            daysData[day].sensorValues[i] = 0;
+        }
+    }
+    /*Parse Data*/
     if (low.getMonth() >= deeto.getMonth() || queryCache.monthsDBCache[low.getMonth()] == null) {
         sensorData.find({
             date: {
@@ -71,14 +91,23 @@ function getMonthParsed(low, high, res) {
         newSensorData.date = low;
         monthData.forEach(function (val, index, ar) {
             var valDate = new Date(val.date);
+
+
             for (var i = 0; i < vars.noOfSensors; i++) {
                 totalSensors[i] += parseInt(val.sensorValues[i]);
+                if (typeof daysData[valDate.getDate() - 1] == "undefined") {
+                    //console.log("Error on: " + valDate.getDate());
+                } else {
+                    // console.log("Inserted on " + valDate.getDate() + " dia.");
+                    daysData[valDate.getDate() - 1].sensorValues[i] += parseInt(val.sensorValues[i]);
+                    daysData[valDate.getDate() - 1].count++;
+                }
 
             }
 
         });
         newSensorData.sensorValues = totalSensors;
-
+        newSensorData.days = daysData;
         res.json(200, {
             sensordata: newSensorData
         });
@@ -154,7 +183,7 @@ exports.showByMonth = function (req, res) {
     var month = req.params.month;
     month--;
     var low = new Date(date.getFullYear(), month, 1, 0, 0, 0);
-    var high = new Date(date.getFullYear(), month + 1, 1, 0, 0, 0);
+    var high = new Date(date.getFullYear(), month + 1, 0, 0, 0, 0);
     //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
     if (month >= date.getMonth() || queryCache.monthsDBCache[month] == null) {
         getDateRange(low, high, res);
@@ -171,7 +200,7 @@ exports.showByMonthParsed = function (req, res) {
     var month = req.params.month;
     month--;
     var low = new Date(date.getFullYear(), month, 1, 0, 0, 0);
-    var high = new Date(date.getFullYear(), month + 1, 1, 0, 0, 0);
+    var high = new Date(date.getFullYear(), month + 1, 0, 0, 0, 0);
     //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
     getMonthParsed(low, high, res);
 }
