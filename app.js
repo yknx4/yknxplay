@@ -68,6 +68,8 @@ app.get('/sensor_data/from_date/:low/to_date/:high', sensor_data.showByDateRange
 app.get('/sensor_data/month/:month', sensor_data.showByMonth);
 app.get('/sensor_data/day/:day', sensor_data.showByDay);
 app.get('/sensor_data/from_hour/:low/to_hour/:high', sensor_data.showByHourRange);
+app.get('/sensor_data/parsed/month/:month', sensor_data.showByMonthParsed);
+
 
 
 //Add input from get petition
