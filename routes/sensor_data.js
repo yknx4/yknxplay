@@ -35,14 +35,15 @@ function getMonthParsed(low, high, res) {
     var newSensorData = {
         date: new Date(),
         count: 0,
-        sensorValues: new Array()
+        sensorValues: new Array(),
+        days: new Array()
     };
-    var days = new Array();
 
     var totalSensors = new Array();
     for (var i = 0; i < vars.noOfSensors; i++) {
         totalSensors[i] = 0;
     }
+
 
     //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
     if (low.getMonth() >= deeto.getMonth() || queryCache.monthsDBCache[low.getMonth()] == null) {
@@ -66,19 +67,13 @@ function getMonthParsed(low, high, res) {
         console.log("Using cache");
         var monthData = queryCache.monthsDBCache[low.getMonth()];
 
-        function tmpDayData() {
-            return {
-                date: new Date(),
-                sensorValues: new Array()
-            };
-        };
         newSensorData.count = monthData.length;
         newSensorData.date = low;
         monthData.forEach(function (val, index, ar) {
             var valDate = new Date(val.date);
             for (var i = 0; i < vars.noOfSensors; i++) {
                 totalSensors[i] += parseInt(val.sensorValues[i]);
-                days[valDate.getDay][i] += parseInt(val.sensorValues[i]);
+
             }
 
         });
