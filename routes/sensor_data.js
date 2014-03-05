@@ -7,42 +7,25 @@ var crlf = new Buffer(2);
 crlf[0] = 0xD; //CR - Carriage return character
 crlf[1] = 0xA; //LF - Line feed character
 
-function reponseWithJson(result, res) {
-    var err = result.err;
-    var docs = result.docs;
-    if (!err) {
-        res.json(200, {
-            sensordata: docs
-        });
-    } else {
-        res.json(500, {
-            message: err
-        });
-    }
-}
 
-function getDateRange(low, high, callback_wParam) {
-    console.log("Query between " + low + " and " + high);
-    var result = {};
-    var done = false;
-
+function getDateRange(low, high, res) {
     sensorData.find({
         date: {
             $gte: low,
             $lt: high
         }
     }, function (err, docs) {
-        console.log('Query completed with ' + docs.length + ' results.');
-        result = {
-            err: err,
-            docs: docs
-        };
-        callback_wParam[0].call(result, callback_wParam[1]);
+        if (!err) {
+            res.json(200, {
+                sensordata: docs
+            });
+        } else {
+            res.json(500, {
+                message: err
+            });
+        }
     });
-
 }
-
-
 
 exports.index = function (req, res) {
     sensorData.find({}, function (err, docs) {
@@ -85,6 +68,7 @@ exports.showByDateRange = function (req, res) {
     var dif = high.getTime() - low.getTime()
     var Seconds_from_T1_to_T2 = dif / 1000;
     var Seconds_Between_Dates = Math.abs(Seconds_from_T1_to_T2);
+    console.log("Query between " + low + " and " + high);
     console.log("Query between " + (Seconds_Between_Dates / 3600) / 24 + "days.");
     if (Seconds_Between_Dates > 604800) {
         res.json(500, {
@@ -101,20 +85,35 @@ exports.showByDay = function (req, res) {
 
     var low = new Date(date.getFullYear(), date.getMonth(), day, 0, 0, 0);
     var high = new Date(date.getFullYear(), date.getMonth(), day, 23, 59, 59);
-
-    var query = getDateRange(low, high, [reponseWithJson, res]);
-
+    //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
+    console.log("Query between " + low + " and " + high);
+    getDateRange(low, high, res);
 }
 exports.showByMonth = function (req, res) {
-    var result = new Array();
+
     var date = new Date();
     var month = req.params.month;
     month--;
     var low = new Date(date.getFullYear(), month, 1, 0, 0, 0);
-    var high = new Date(date.getFullYear(), month + 1, 0, 0, 0, 0);
-
-
-
+    var high = new Date(date.getFullYear(), month + 1, 1, 0, 0, 0);
+    //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
+    console.log("Query between " + low + " and " + high);
+    sensorData.find({
+        date: {
+            $gte: low,
+            $lt: high
+        }
+    }, function (err, docs) {
+        if (!err) {
+            res.json(200, {
+                sensordata: docs
+            });
+        } else {
+            res.json(500, {
+                message: err
+            });
+        }
+    });
 }
 exports.showByHourRange = function (req, res) {
 
@@ -122,6 +121,7 @@ exports.showByHourRange = function (req, res) {
     var bigger_hour = req.params.high;
     var low = new Date(date.getFullYear(), date.getMonth(), date.getDay(), lower_hour, 0, 0);
     var high = new Date(date.getFullYear(), date.getMonth(), date.getDay(), bigger_hour, 59, 59);
+    //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
     console.log("Query between " + low + " and " + high);
     sensorData.find({
         date: {
@@ -152,6 +152,7 @@ exports.create = function (req, res) {
         newSensorData.save(function (err) {
 
             if (!err) {
+                //fs.appendFile("mydata.txt", dateHelper.getDateTime() + full_msg + crlf, encoding = 'utf8', function (err) {}); //write the value to file and add CRLF for line break
                 res.json(201, {
                     message: "sensorData created on: " +
                         newSensorData.date

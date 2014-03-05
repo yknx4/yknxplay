@@ -29,6 +29,3 @@ exports.getDateTime = function () {
     return year + "/" + month + "/" + day + " " + hour + ":" + min + ", ";
 
 }
-exports.daysInMonth = function (month, year) {
-    return new Date(year, month - 1, 0).getDate();
-}
