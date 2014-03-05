@@ -3,6 +3,7 @@
  */
 var vars = require("./global_var");
 var routesParams = require("./helpers/routesParams");
+var queryCache = require("./helpers/queryCache");
 exports.globar_vars = vars;
 var express = require('express');
 var routes = require('./routes');
@@ -76,3 +77,4 @@ http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server (JSON API) listening on port ' + app.get('port'));
 });
 udpServer.startUDPServer();
+queryCache.doCache();
