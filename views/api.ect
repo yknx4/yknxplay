@@ -1,4 +1,5 @@
 <% extend 'layout.ect' %>
+<% count = 0 %>
 <% apiHelper = (item) -> %>
 	
     <div class="panel panel-info">
@@ -7,8 +8,16 @@
               </div>
               <div class="panel-body">
                <%- item.description %>
-              </div>
+               <br/>
+               <br/>
+               <a data-toggle="collapse" data-parent="#accordion" href="#collapseExample<%-count%>">
+               <button type="button" class="btn btn-primary btn-xs">Mostrar Ejemplo</button>
+          
+        </a>
+              </div><div id="collapseExample<%-count%>" class="panel-collapse collapse out">
+              <div class="panel-footer"><pre class="prettyprint lang-js"><%- item.example %></pre></div></div>
             </div>
+            <% count++ %>
 <% end %>
 <div class="row">
           <div class="col-lg-12">

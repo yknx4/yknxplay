@@ -37,34 +37,103 @@ function newDayData(nDate, day) {
     return result;
 }
 
+function newHourData(nDate, hour) {
+    var result = new Object();
+    result.date = new Date(nDate.getFullYear(), nDate.getMonth(), nDate.getDate(), hour, 0, 0);
+    result.count = 0;
+    result.sensorValues = new Array();
+    return result;
+}
 
-
-function getMonthParsed(low, high, res) {
-    console.log("Query between " + low + " and " + high);
-    var deeto = new Date();
-    /*Temporal Data*/
+function parseMonthData(high, monthData) {
+    var result = new Array();
     var daysData = new Array();
     var totalSensors = new Array();
-    var newSensorData = {
-        date: new Date(),
-        count: 0,
-        sensorValues: new Array(),
-        days: new Array()
-    };
-
     /*Array Initialization*/
     for (var i = 0; i < vars.noOfSensors; i++) {
         totalSensors[i] = 0;
     }
     for (var day = 0; day < high.getDate(); day++) {
         // console.log(day + " dafack");
-        var tmpDay = newDayData(low, day + 1);
+        var tmpDay = newDayData(high, day + 1);
         daysData[day] = tmpDay;
         //console.log(daysData[day].date);
         for (var i = 0; i < vars.noOfSensors; i++) {
             daysData[day].sensorValues[i] = 0;
         }
     }
+    monthData.forEach(function (val, index, ar) {
+        var valDate = new Date(val.date);
+        for (var i = 0; i < vars.noOfSensors; i++) {
+            totalSensors[i] += parseInt(val.sensorValues[i]);
+            if (typeof daysData[valDate.getDate() - 1] == "undefined") {
+                console.log("Error on: " + valDate.getDate());
+            } else {
+                // console.log("Inserted on " + valDate.getDate() + " dia.");
+                daysData[valDate.getDate() - 1].sensorValues[i] += parseInt(val.sensorValues[i]);
+                daysData[valDate.getDate() - 1].count++;
+            }
+
+        }
+
+    });
+    return {
+        daysData: daysData,
+        totalData: totalSensors
+    };
+}
+
+function parseDayData(high, dayData) {
+    var result = new Array();
+    var hoursData = new Array();
+    var totalSensors = new Array();
+    /*Array Initialization*/
+    for (var i = 0; i < vars.noOfSensors; i++) {
+        totalSensors[i] = 0;
+    }
+    for (var hour = 0; hour < 24; hour++) {
+        // console.log(day + " dafack");
+        var tmpHour = newHourData(high, hour + 1);
+        hoursData[hour] = tmpHour;
+        //console.log(daysData[day].date);
+        for (var i = 0; i < vars.noOfSensors; i++) {
+            hoursData[hour].sensorValues[i] = 0;
+        }
+    }
+    dayData.forEach(function (val, index, ar) {
+        var valDate = new Date(val.date);
+        for (var i = 0; i < vars.noOfSensors; i++) {
+            totalSensors[i] += parseInt(val.sensorValues[i]);
+            if (typeof hoursData[valDate.getHours() - 1] == "undefined") {
+                console.log("Error on: " + valDate.getDate());
+            } else {
+                // console.log("Inserted on " + valDate.getDate() + " dia.");
+                hoursData[valDate.getHours() - 1].sensorValues[i] += parseInt(val.sensorValues[i]);
+                hoursData[valDate.getHours() - 1].count++;
+            }
+
+        }
+
+    });
+    return {
+        hoursData: hoursData,
+        totalData: totalSensors
+    };
+}
+
+function getMonthParsed(low, high, res) {
+    console.log("Query between " + low + " and " + high);
+    var deeto = new Date();
+    /*Temporal Data*/
+    var monthData;
+    var parsedData;
+    var newSensorData = {
+        date: new Date(),
+        count: 0,
+        sensorValues: new Array(),
+        days: new Array()
+    };
+    newSensorData.date = low;
     /*Parse Data*/
     if (low.getMonth() >= deeto.getMonth() || queryCache.monthsDBCache[low.getMonth()] == null) {
         sensorData.find({
@@ -74,8 +143,13 @@ function getMonthParsed(low, high, res) {
             }
         }, function (err, docs) {
             if (!err) {
+                monthData = docs;
+                newSensorData.count = monthData.length;
+                parsedData = parseMonthData(high, monthData);
+                newSensorData.days = parsedData.daysData;
+                newSensorData.sensorValues = parsedData.totalData;
                 res.json(200, {
-                    sensordata: docs
+                    sensordata: newSensorData
                 });
             } else {
                 res.json(500, {
@@ -85,33 +159,56 @@ function getMonthParsed(low, high, res) {
         });
     } else {
         console.log("Using cache");
-        var monthData = queryCache.monthsDBCache[low.getMonth()];
-
+        monthData = queryCache.monthsDBCache[low.getMonth()];
         newSensorData.count = monthData.length;
-        newSensorData.date = low;
-        monthData.forEach(function (val, index, ar) {
-            var valDate = new Date(val.date);
-
-
-            for (var i = 0; i < vars.noOfSensors; i++) {
-                totalSensors[i] += parseInt(val.sensorValues[i]);
-                if (typeof daysData[valDate.getDate() - 1] == "undefined") {
-                    //console.log("Error on: " + valDate.getDate());
-                } else {
-                    // console.log("Inserted on " + valDate.getDate() + " dia.");
-                    daysData[valDate.getDate() - 1].sensorValues[i] += parseInt(val.sensorValues[i]);
-                    daysData[valDate.getDate() - 1].count++;
-                }
-
-            }
-
-        });
-        newSensorData.sensorValues = totalSensors;
-        newSensorData.days = daysData;
+        parsedData = parseMonthData(high, monthData);
+        newSensorData.days = parsedData.daysData;
+        newSensorData.sensorValues = parsedData.totalData;
         res.json(200, {
             sensordata: newSensorData
         });
     }
+
+
+}
+
+function getDayParsed(low, high, res) {
+    console.log("Query between " + low + " and " + high);
+    var deeto = new Date();
+    /*Temporal Data*/
+    var dayData;
+    var parsedData;
+    var newSensorData = {
+        date: new Date(),
+        count: 0,
+        sensorValues: new Array(),
+        hours: new Array()
+    };
+    newSensorData.date = low;
+    /*Parse Data*/
+
+    sensorData.find({
+        date: {
+            $gte: low,
+            $lt: high
+        }
+    }, function (err, docs) {
+        if (!err) {
+            dayData = docs;
+            newSensorData.count = dayData.length;
+            parsedData = parseDayData(high, dayData);
+            newSensorData.hours = parsedData.hoursData;
+            newSensorData.sensorValues = parsedData.totalData;
+            res.json(200, {
+                sensordata: newSensorData
+            });
+        } else {
+            res.json(500, {
+                message: err
+            });
+        }
+    });
+
 
 
 }
@@ -194,6 +291,29 @@ exports.showByMonth = function (req, res) {
         });
     }
 }
+exports.showByDayParsed = function (req, res) {
+
+    var date = new Date();
+    var day = req.params.day;
+
+    var low = new Date(date.getFullYear(), date.getMonth(), day, 0, 0, 0);
+    var high = new Date(date.getFullYear(), date.getMonth(), day, 23, 59, 59);
+    //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
+    console.log("Query between " + low + " and " + high);
+    getDayParsed(low, high, res);
+}
+exports.showByDayMonthParsed = function (req, res) {
+
+    var date = new Date();
+    var day = req.params.day;
+    var month = req.params.month;
+    month--;
+    var low = new Date(date.getFullYear(), month, day, 0, 0, 0);
+    var high = new Date(date.getFullYear(), month, day, 23, 59, 59);
+    //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
+    console.log("Query between " + low + " and " + high);
+    getDayParsed(low, high, res);
+}
 exports.showByMonthParsed = function (req, res) {
 
     var date = new Date();
@@ -205,7 +325,7 @@ exports.showByMonthParsed = function (req, res) {
     getMonthParsed(low, high, res);
 }
 exports.showByHourRange = function (req, res) {
-
+    var date = new Date();
     var lower_hour = req.params.low;
     var bigger_hour = req.params.high;
     var low = new Date(date.getFullYear(), date.getMonth(), date.getDay(), lower_hour, 0, 0);
