@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $.get("/sensor_data/month/2", {}, function (data) {
+    $.get("/sensor_data/month/1", {}, function (data) {
         var jData = JSON.parse(data);
         var fData = jData.sensordata;
         var values = new Array();

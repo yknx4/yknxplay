@@ -284,7 +284,7 @@ exports.showByMonth = function (req, res) {
     var month = req.params.month;
     month--;
     var low = new Date(date.getFullYear(), month, 1, 0, 0, 0);
-    var high = new Date(date.getFullYear(), month + 1, 0, 0, 0, 0);
+    var high = new Date(date.getFullYear(), month + 1, 0, 23, 59, 59);
     //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
     if (month >= date.getMonth() || queryCache.monthsDBCache[month] == null) {
         getDateRange(low, high, res);
@@ -324,7 +324,7 @@ exports.showByMonthParsed = function (req, res) {
     var month = req.params.month;
     month--;
     var low = new Date(date.getFullYear(), month, 1, 0, 0, 0);
-    var high = new Date(date.getFullYear(), month + 1, 0, 0, 0, 0);
+    var high = new Date(date.getFullYear(), month + 1, 0, 23, 59, 59);
     //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
     getMonthParsed(low, high, res);
 }

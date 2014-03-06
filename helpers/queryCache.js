@@ -12,7 +12,7 @@ exports.doCache = function () {
         console.log("Cache of month " + (i + "") + " called.");
         var pos = i;
         var low = new Date(date.getFullYear(), pos, 1, 0, 0, 0);
-        var high = new Date(date.getFullYear(), pos + 1, 0, 0, 0, 0);
+        var high = new Date(date.getFullYear(), pos + 1, 0, 23, 59, 59);
         //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
 
         sensorData.find({
