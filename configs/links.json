@@ -1,0 +1,17 @@
+ [
+     {
+         "name": "Home",
+         "url": "/",
+         "class": "fa fa-home"
+        },
+     {
+         "name": "API",
+         "url": "/sensor_data/",
+         "class": "fa fa-files-o"
+        },
+     {
+         "name": "Charts",
+         "url": "/charts.html",
+         "class": "fa fa-bar-chart-o"
+        }
+ ]
