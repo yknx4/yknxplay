@@ -1,28 +1,21 @@
 var vars = require("../global_var");
-exports.defaultParams = {
-    title: 'Water Flow',
-    active: 'Home',
-    links: [
-        {
-            name: 'Home',
-            url: '/',
-            class: 'fa fa-home'
-        },
-        {
-            name: 'API',
-            url: '/sensor_data/',
-            class: 'fa fa-files-o'
-        },
-        {
-            name: 'Charts',
-            url: '/charts.html',
-            class: 'fa fa-bar-chart-o'
+var fs = require('fs');
+
+exports.homeJS = ['http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js', 'http://cdnjs.cloudflare.com/ajax/libs/knockout/3.0.0/knockout-min.js', 'http://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js', 'http://cdn3.devexpress.com/jslib/13.2.7/js/dx.chartjs.js', 'http://cdn3.devexpress.com/jslib/13.2.7/js/dx.all.js', '/js/pages/index.js'];
+exports.homeCSS = [''];
+exports.defaultParams = function () {
+    return {
+        title: 'Water Flow',
+        active: 'Home',
+        js: new Array(),
+        css: new Array(),
+        links: JSON.parse(fs.readFileSync('./configs/links.json', 'utf8')),
+        upperHelper: function (string) {
+            return string.toUpperCase();
         }
- ],
-    upperHelper: function (string) {
-        return string.toUpperCase();
-    }
-};
+    };
+}
+
 var ex1 = {
     "_id": "53169d9041f00f181b90b0a3",
     "__v": 0,

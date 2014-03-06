@@ -10,6 +10,7 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var fs = require('fs');
 var sensor_data = require('./routes/sensor_data');
 var mongoose = require('mongoose');
 var udpServer = require("./udpServer/listener");
@@ -44,20 +45,23 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-var data = routesParams.defaultParams;
+
 
 
 app.get('/', function (req, res) {
-    var d = data;
+    var d = routesParams.defaultParams();
     d.title = 'Water Flow';
     d.active = 'Home';
+    d.js = routesParams.homeJS;
+    d.css = routesParams.homeCSS;
     res.render('index.ect', d);
 });
 app.get('/sensor_data', function (req, res) {
-    var d = data;
+    var d = routesParams.defaultParams();
     d.active = 'API';
     d.title = 'Water Flox - JSON API';
     d.apiList = routesParams.apiList.list;
+
     res.render('api.ect', d);
 });
 app.get('/users', user.list);
@@ -71,7 +75,7 @@ app.get('/sensor_data/month/:month/day/:day', sensor_data.showByDayMonthParsed);
 app.get('/sensor_data/from_hour/:low/to_hour/:high', sensor_data.showByHourRange);
 //app.get('/sensor_data/day/:day', sensor_data.showByDay);
 //app.get('/sensor_data/parsed/month/:month', sensor_data.showByMonthParsed);
-
+console.log(JSON.parse(fs.readFileSync('./configs/links.json', 'utf8')));
 
 
 //Add input from get petition

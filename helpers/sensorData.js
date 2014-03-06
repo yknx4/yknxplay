@@ -25,9 +25,9 @@ exports.getSensorDataFromMsg = function (full_msg) {
     for (var i = 0; i < vars.noOfSensors; i++) {
         var start = (2 + vars.msgSize * i);
         var end = 1 + vars.msgSize + vars.msgSize * i;
-        console.log('from ' + start + ' to ' + end);
+        //console.log('from ' + start + ' to ' + end);
         var sensor_msg = full_msg.substring(start, end);
-        sensor_data[i] = sensor_msg;
+        sensor_data[i] = parseInt(sensor_msg);
     }
     //    result.date = new Date();
     /*This will be just for randomizing*/

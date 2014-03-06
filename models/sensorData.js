@@ -1,11 +1,16 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
+var vars = require("../global_var");
 
-
+var defaultSen = new Array(vars.noOfSensors);
+for (var i = 0; i < vars.noOfSensors; i++) {
+    defaultSen[i] = 0;
+}
 var sensorDataSchema = new Schema({
     sensorValues: {
         type: Array,
-        required: true
+        required: true,
+        default: defaultSen
     },
     date: {
         type: Date,

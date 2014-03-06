@@ -103,7 +103,11 @@ function parseDayData(high, dayData) {
     dayData.forEach(function (val, index, ar) {
         var valDate = new Date(val.date);
         for (var i = 0; i < vars.noOfSensors; i++) {
-            totalSensors[i] += parseInt(val.sensorValues[i]);
+            var vl = parseInt(val.sensorValues[i]);
+            var v2;
+            if (isNaN(vl)) v2 = 0;
+            else v2 = vl;
+            totalSensors[i] += v2;
             if (typeof hoursData[valDate.getHours() - 1] == "undefined") {
                 console.log("Error on: " + valDate.getDate());
             } else {

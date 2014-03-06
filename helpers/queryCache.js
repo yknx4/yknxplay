@@ -22,12 +22,13 @@ exports.doCache = function () {
             }
         }, function (err, docs) {
             //console.log(docs[0].date);
-            var jdate = Date.parse(docs[0].date);
-            jdate = new Date(jdate);
-            var mo = jdate.getMonth();
-            console.log("Cache of month " + mo + " ended with " + docs.length + " documents.");
-            exports.monthsDBCache[mo] = docs;
-
+            if (!err && docs.length > 0) {
+                var jdate = Date.parse(docs[0].date);
+                jdate = new Date(jdate);
+                var mo = jdate.getMonth();
+                console.log("Cache of month " + mo + " ended with " + docs.length + " documents.");
+                exports.monthsDBCache[mo] = docs;
+            }
         });
     }
 
