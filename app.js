@@ -45,25 +45,24 @@ if ('development' == app.get('env')) {
     app.use(express.errorHandler());
 }
 
-
+function getPageParams(name) {
+    var def = routesParams.defaultParams();
+    var read = JSON.parse(fs.readFileSync('./configs/pages/' + name + '.json', 'utf8'));
+    read.title = def.title + ' - ' + read.title;
+    return vars.mergeJson(def, read);
+}
 
 
 app.get('/', function (req, res) {
-    var d = routesParams.defaultParams();
-    d.title = 'Water Flow';
-    d.active = 'Home';
-    d.js = routesParams.homeJS;
-    d.css = routesParams.homeCSS;
-    res.render('index.ect', d);
+    var d = getPageParams('index');
+    res.render(d.page_file, d);
 });
-app.get('/sensor_data', function (req, res) {
-    var d = routesParams.defaultParams();
-    d.active = 'API';
-    d.title = 'Water Flox - JSON API';
-    d.apiList = routesParams.apiList.list;
 
-    res.render('api.ect', d);
+app.get('/sensor_data', function (req, res) {
+    var d = getPageParams('api');
+    res.render(d.page_file, d);
 });
+
 app.get('/users', user.list);
 //app.get('/sensor_data', sensor_data.index);
 app.get('/sensor_data/create/:msg', sensor_data.create);

@@ -1,8 +1,7 @@
 var vars = require("../global_var");
 var fs = require('fs');
 
-exports.homeJS = ['http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js', 'http://cdnjs.cloudflare.com/ajax/libs/knockout/3.0.0/knockout-min.js', 'http://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js', 'http://cdn3.devexpress.com/jslib/13.2.7/js/dx.chartjs.js', 'http://cdn3.devexpress.com/jslib/13.2.7/js/dx.all.js', '/js/pages/index.js'];
-exports.homeCSS = [''];
+
 exports.defaultParams = function () {
     return {
         title: 'Water Flow',
