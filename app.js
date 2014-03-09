@@ -74,7 +74,6 @@ app.get('/sensor_data/month/:month/day/:day', sensor_data.showByDayMonthParsed);
 app.get('/sensor_data/from_hour/:low/to_hour/:high', sensor_data.showByHourRange);
 //app.get('/sensor_data/day/:day', sensor_data.showByDay);
 //app.get('/sensor_data/parsed/month/:month', sensor_data.showByMonthParsed);
-console.log(JSON.parse(fs.readFileSync('./configs/links.json', 'utf8')));
 
 
 //Add input from get petition
