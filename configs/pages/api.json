@@ -11,16 +11,16 @@
         "description": "El parámetro :id toma como etrada el object_id de la lectura",
         "example": "{\n  \"_id\": \"53169d9041f00f181b90b0a3\",\n  \"__v\": 0,\n  \"date\": \"2014-03-17T01:50:00.000Z\",\n  \"sensorValues\": [\n    \"3766\",\n    \"0094\",\n    \"3484\"\n  ]\n}"
     }, {
-        "header": "Obtener toda la información en un mes: \" /sensor_data/month/:month \"",
-        "description": "El parámetro :month es el valor numérico de un mes. Ej (Febrero). '/sensor_data/month/2' <br/> (Ejemplo reducido)",
+        "header": "Obtener toda la información en un mes: \" /sensor_data/year/:year/month/:month \"",
+        "description": "El parametro :year es el año, el parámetro :month es el valor numérico de un mes. Ej (Febrero 2014). '/sensor_data/year/2014/month/2' <br/> (Ejemplo reducido)",
         "example": "{\n  \"sensordata\": {\n    \"date\": \"2014-02-01T06:00:00.000Z\",\n    \"count\": 48247,\n    \"sensorValues\": [\n      241041386,\n      241600672,\n      241359893\n    ],\n    \"days\": [\n      {\n        \"date\": \"2014-02-01T06:00:00.000Z\",\n        \"count\": 5340,\n        \"sensorValues\": [\n          8935922,\n          9047416,\n          8782876\n        ]\n      },\n      {\n        \"date\": \"2014-02-12T06:00:00.000Z\",\n        \"count\": 5355,\n        \"sensorValues\": [\n          9039812,\n          8736961,\n          8847353\n        ]\n      }\n    ]\n  }\n}"
     }, {
         "header": "Obtener toda la información para un día del mes actual: \" /sensor_data/day/:day \"",
         "description": "El parámetro :day es un día del mes. Ej (Dia 7). '/sensor_data/day/7'<br/> (Ejemplo reducido)",
         "example": "{\n  \"sensordata\": {\n    \"date\": \"2014-03-07T06:00:00.000Z\",\n    \"count\": 1773,\n    \"sensorValues\": [\n      8869915,\n      9069631,\n      8879653\n    ],\n    \"hours\": [\n      {\n        \"date\": \"2014-03-07T07:00:00.000Z\",\n        \"count\": 231,\n        \"sensorValues\": [\n          392455,\n          379485,\n          423907\n        ]\n      },\n      {\n        \"date\": \"2014-03-08T05:00:00.000Z\",\n        \"count\": 246,\n        \"sensorValues\": [\n          332134,\n          420830,\n          371568\n        ]\n      }\n    ]\n  }\n}"
     }, {
-        "header": "Obtener toda la información para un día de un mes: \" /sensor_data/month/:month/day/:day \"",
-        "description": "El paramentro :month es el número del mes, y el parámetro :day es un día del mes. Ej (Mes Enero, Dia 7). '/sensor_data/month/1/day/7'<br/> (Ejemplo reducido)",
+        "header": "Obtener toda la información para un día de un mes: \" /sensor_data/year/:year/month/:month/day/:day \"",
+        "description": "El parametro :year es el año, el paramentro :month es el número del mes, y el parámetro :day es un día del mes. Ej (Mes Enero, Dia 7, Año 2014). '/sensor_data/year/2014/month/1/day/7'<br/> (Ejemplo reducido)",
         "example": "{\n  \"sensordata\": {\n    \"date\": \"2014-01-07T06:00:00.000Z\",\n    \"count\": 1751,\n    \"sensorValues\": [\n      8634184,\n      8896086,\n      8637257\n    ],\n    \"hours\": [\n      {\n        \"date\": \"2014-01-07T07:00:00.000Z\",\n        \"count\": 219,\n        \"sensorValues\": [\n          374909,\n          398473,\n          335731\n        ]\n      },\n      {\n        \"date\": \"2014-01-08T05:00:00.000Z\",\n        \"count\": 213,\n        \"sensorValues\": [\n          404092,\n          354073,\n          331230\n        ]\n      }\n    ]\n  }\n}"
     }, {
         "header": "Obtener toda la información para un rango de horas del día: \" /sensor_data/from_hour/:low/to_hour/:high \"",

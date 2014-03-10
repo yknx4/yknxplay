@@ -8,6 +8,7 @@
         "http://ajax.aspnetcdn.com/ajax/globalize/0.1.1/globalize.min.js",
         "http://cdn3.devexpress.com/jslib/13.2.7/js/dx.chartjs.js",
         "http://cdn3.devexpress.com/jslib/13.2.7/js/dx.all.js",
+        "/js/date/date.js",
         "/js/pages/index.js"
         ],
     "css": [

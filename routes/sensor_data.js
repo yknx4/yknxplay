@@ -301,7 +301,7 @@ exports.showByDayParsed = function (req, res) {
     var day = req.params.day;
 
     var low = new Date(date.getFullYear(), date.getMonth(), day, 0, 0, 0);
-    var high = new Date(date.getFullYear(), date.getMonth(), day, 23, 59, 59);
+    var high = new Date(date.getFullYear(), date.getMonth(), day + 1, 0, 0, 0);
     //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
     console.log("Query between " + low + " and " + high);
     getDayParsed(low, high, res);
@@ -309,23 +309,27 @@ exports.showByDayParsed = function (req, res) {
 exports.showByDayMonthParsed = function (req, res) {
 
     var date = new Date();
+    var year = req.params.year;
+    if (year > date.getFullYear()) year = date.getFullYear();
     var day = req.params.day;
     var month = req.params.month;
     month--;
-    var low = new Date(date.getFullYear(), month, day, 0, 0, 0);
-    var high = new Date(date.getFullYear(), month, day, 23, 59, 59);
-    //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
+    var low = new Date(year, month, day, 0, 0, 0);
+    var high = new Date(year, month, day + 1, 0, 0, 0);
+
     console.log("Query between " + low + " and " + high);
     getDayParsed(low, high, res);
 }
 exports.showByMonthParsed = function (req, res) {
 
     var date = new Date();
+    var year = req.params.year;
+    if (year > date.getFullYear()) year = date.getFullYear();
     var month = req.params.month;
     month--;
-    var low = new Date(date.getFullYear(), month, 1, 0, 0, 0);
-    var high = new Date(date.getFullYear(), month + 1, 0, 23, 59, 59);
-    //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
+    var low = new Date(year, month, 1, 0, 0, 0);
+    var high = new Date(year, month + 1, 0, 23, 59, 59);
+
     getMonthParsed(low, high, res);
 }
 exports.showByHourRange = function (req, res) {

@@ -32,9 +32,9 @@ exports.getSensorDataFromMsg = function (full_msg) {
     //    result.date = new Date();
     /*This will be just for randomizing*/
     var curDate = new Date();
-    var ranMonth = Math.floor((Math.random() * 4));
+    var ranMonth = Math.floor((Math.random() * 3));
     var ranDay = Math.floor((Math.random() * 32) + 1);
-    var ranHour = Math.floor((Math.random() * 23) + 1);
+    var ranHour = Math.floor((Math.random() * 24) + 1);
     var ranMinute = Math.floor((Math.random() * 59) + 1);
     var fDate = new Date(curDate.getFullYear(), ranMonth, ranDay, ranHour, ranMinute, 0);
 
