@@ -1,3 +1,7 @@
+function daysInMonth(month, year) {
+    return new Date(year, month, 0).getDate();
+}
+
 $(document).ready(function () {
     var date = new Date();
     $.get("/sensor_data/year/" + date.getFullYear() + "/month/" + (date.getMonth() + 1), {}, function (data) {
@@ -9,7 +13,7 @@ $(document).ready(function () {
         var values = new Array();
 
         for (var i = 0; i < fData.sensorValues.length; i++) {
-            values[i] = (fData.sensorValues[i] / fData.count) * (1 + .4 * i);
+            values[i] = (fData.sensorValues[i] / fData.count[i]) * (1 + .4 * i);
         }
         console.log(fData);
         console.log(JSON.stringify(values));
@@ -39,15 +43,16 @@ $(document).ready(function () {
 
         daysData.forEach(function (val, index, arr) {
             var vDate = index + 1;
-            var avg = (val.sensorValues[0] + val.sensorValues[1] + val.sensorValues[2]) / 3;
-            if (val.count > 0)
-                fDataC.push({
-                    year: JSON.stringify(vDate),
-                    s0: val.sensorValues[0],
-                    s1: val.sensorValues[1],
-                    s2: val.sensorValues[2],
-                    avg: avg
-                });
+            var avg = (val.sensorValues[0] / val.count[0] + val.sensorValues[1] / val.count[1] + val.sensorValues[2] / val.count[2]) / 3;
+            avg *= 720;
+
+            fDataC.push({
+                year: JSON.stringify(vDate),
+                s0: (val.sensorValues[0] / val.count[0]) * 720,
+                s1: (val.sensorValues[1] / val.count[1]) * 720,
+                s2: (val.sensorValues[2] / val.count[2]) * 720,
+                avg: avg
+            });
         });
 
         $("#flowpdChartContainer").dxChart({
@@ -106,7 +111,7 @@ $(document).ready(function () {
         var values = new Array();
 
         for (var i = 0; i < fData.sensorValues.length; i++) {
-            values[i] = (fData.sensorValues[i] / fData.count) * (1 + .4 * i);
+            values[i] = (fData.sensorValues[i] / fData.count[i]) * (1 + .4 * i);
         }
         console.log(fData);
         console.log(JSON.stringify(values));
@@ -118,15 +123,15 @@ $(document).ready(function () {
 
         hoursData.forEach(function (val, index, arr) {
             var vDate = index + 1;
-            var avg = (val.sensorValues[0] + val.sensorValues[1] + val.sensorValues[2]) / 3;
-            if (val.count > 0)
-                fDataC.push({
-                    year: JSON.stringify(vDate),
-                    s0: val.sensorValues[0],
-                    s1: val.sensorValues[1],
-                    s2: val.sensorValues[2],
-                    avg: avg
-                });
+            var avg = ((val.sensorValues[0] / val.count[0] + val.sensorValues[1] / val.count[1] + val.sensorValues[2] / val.count[2]) / 3) * 30;
+
+            fDataC.push({
+                year: JSON.stringify(vDate),
+                s0: (val.sensorValues[0] / val.count[0]) * 30,
+                s1: (val.sensorValues[1] / val.count[0]) * 30,
+                s2: (val.sensorValues[2] / val.count[0]) * 30,
+                avg: avg
+            });
         });
 
         $("#flowLastDayChartContainer").dxChart({

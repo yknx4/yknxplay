@@ -21,6 +21,8 @@ var ectRenderer = ECT({
     root: __dirname + '/views'
 });
 
+var links = JSON.parse(fs.readFileSync('./configs/links.json', 'utf8'));
+
 mongoose.connect("mongodb://" + vars.dbServer + ":" + vars.dbPort + "/" + vars.dbName);
 
 var app = express();
@@ -52,7 +54,17 @@ function getPageParams(name) {
     return vars.mergeJson(def, read);
 }
 
+links.forEach(function (obj, index, arr) {
+    if (obj.file != "") {
+        app.get(obj.url, function (req, res) {
+            var d = getPageParams(obj.file);
+            res.render(d.page_file, d);
 
+        });
+    }
+
+});
+/*
 app.get('/', function (req, res) {
     var d = getPageParams('index');
     res.render(d.page_file, d);
@@ -61,7 +73,7 @@ app.get('/', function (req, res) {
 app.get('/sensor_data', function (req, res) {
     var d = getPageParams('api');
     res.render(d.page_file, d);
-});
+});*/
 
 
 app.get('/sensor_data/create/:msg', sensor_data.create);
