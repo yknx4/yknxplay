@@ -13,7 +13,7 @@ $(document).ready(function () {
         var values = new Array();
         var avg = 0;
         for (var i = 0; i < fData.sensorValues.length; i++) {
-            values[i] = (fData.sensorValues[i] / fData.count[i]) * (1 + .4 * i);
+            values[i] = (fData.sensorValues[i] / fData.count[i]);
             avg += values[i];
         }
         avg /= fData.sensorValues.length;
@@ -21,7 +21,7 @@ $(document).ready(function () {
         console.log(fData);
         console.log(JSON.stringify(values));
         $('#avgMChartContainer').dxBarGauge({
-            startValue: avg / 2,
+            startValue: avg / 1.5,
             endValue: avg * 1.5,
             values: values,
             label: {
@@ -42,14 +42,12 @@ $(document).ready(function () {
         var valuesT = new Array();
         var totalAvg = 0;
         for (var i = 0; i < fData.sensorValues.length; i++) {
-            valuesT[i] = fData.sensorValues[i] * (1 + .4 * i);
+            valuesT[i] = fData.sensorValues[i];
             totalAvg += valuesT[i];
         }
         totalAvg /= fData.sensorValues.length;
-        console.log(fData);
-        console.log(JSON.stringify(values));
         $('#totalMChartContainer').dxBarGauge({
-            startValue: totalAvg / 2,
+            startValue: totalAvg / 1.5,
             endValue: totalAvg * 1.5,
             values: valuesT,
             label: {

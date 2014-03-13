@@ -75,7 +75,7 @@ function parseMonthData(high, monthData) {
         for (var i = 0; i < vars.noOfSensors; i++) {
             totalSensors[i] += parseInt(val.sensorValues[i]);
             if (typeof daysData[valDate.getDate() - 1] == "undefined") {
-                console.log("Error on: " + valDate.getDate());
+                console.log("Erroer on: " + valDate.getDate());
             } else {
                 totalCount[i]++;
                 // console.log("Inserted on " + valDate.getDate() + " dia.");
@@ -106,7 +106,7 @@ function parseDayData(high, dayData) {
     }
     for (var hour = 0; hour < 24; hour++) {
         // console.log(day + " dafack");
-        var tmpHour = newHourData(high, hour + 1);
+        var tmpHour = newHourData(high, hour);
         hoursData[hour] = tmpHour;
         //console.log(daysData[day].date);
         for (var i = 0; i < vars.noOfSensors; i++) {
@@ -123,13 +123,15 @@ function parseDayData(high, dayData) {
             else v2 = vl;
             totalSensors[i] += v2;
 
-            if (typeof hoursData[valDate.getHours() - 1] == "undefined") {
-                console.log("Error on: " + valDate.getDate());
+            if (typeof hoursData[valDate.getHours() ] == "undefined") {
+                hoursData[valDate.getHours() ] = newHourData(high,valDate.getHours());
+                console.log("Errora on: " + valDate.getHours());
+                console.log(hoursData.length);
             } else {
                 totalCount[i]++;
                 // console.log("Inserted on " + valDate.getDate() + " dia.");
-                hoursData[valDate.getHours() - 1].sensorValues[i] += parseInt(val.sensorValues[i]);
-                hoursData[valDate.getHours() - 1].count[i]++;
+                hoursData[valDate.getHours() ].sensorValues[i] += parseInt(val.sensorValues[i]);
+                hoursData[valDate.getHours() ].count[i]++;
             }
 
         }
@@ -322,7 +324,7 @@ exports.showByDayParsed = function (req, res) {
     var day = req.params.day;
 
     var low = new Date(date.getFullYear(), date.getMonth(), day, 0, 0, 0);
-    var high = new Date(date.getFullYear(), date.getMonth(), day + 1, 0, 0, 0);
+    var high = new Date(date.getFullYear(), date.getMonth(), day, 23, 59, 59);
     //console.log("Expected date:" + new Date('2014-02-28T03:22:16.414Z'));
     console.log("Query between " + low + " and " + high);
     getDayParsed(low, high, res);

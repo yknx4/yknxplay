@@ -18,7 +18,7 @@ exports.validate = function (full_msg) {
         return false;
     }
 }
-var tmpDate = new Date(2014, 1, 1, 0, 0, 0);
+var tmpDate = new Date(2014, 0, 1, 0, 0, 0);
 exports.getSensorDataFromMsg = function (full_msg) {
     var result = new sensorData();
     var sensor_data = new Array();
@@ -32,7 +32,7 @@ exports.getSensorDataFromMsg = function (full_msg) {
     //    result.date = new Date();
     /*This will be just for randomizing*/
     result.date = tmpDate;
-    tmpDate.setMinutes(tmpDate.getMinutes + 2);
+    tmpDate.setMinutes(tmpDate.getMinutes() + 2);
     result.sensorValues = sensor_data;
     return result;
 }
