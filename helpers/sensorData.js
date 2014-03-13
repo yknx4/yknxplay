@@ -18,7 +18,7 @@ exports.validate = function (full_msg) {
         return false;
     }
 }
-
+var tmpDate = new Date(2014, 1, 1, 0, 0, 0);
 exports.getSensorDataFromMsg = function (full_msg) {
     var result = new sensorData();
     var sensor_data = new Array();
@@ -31,14 +31,8 @@ exports.getSensorDataFromMsg = function (full_msg) {
     }
     //    result.date = new Date();
     /*This will be just for randomizing*/
-    var curDate = new Date();
-    var ranMonth = Math.floor((Math.random() * 3));
-    var ranDay = Math.floor((Math.random() * 32) + 1);
-    var ranHour = Math.floor((Math.random() * 24) + 1);
-    var ranMinute = Math.floor((Math.random() * 59) + 1);
-    var fDate = new Date(curDate.getFullYear(), ranMonth, ranDay, ranHour, ranMinute, 0);
-
-    result.date = fDate;
+    result.date = tmpDate;
+    tmpDate.setMinutes(tmpDate.getMinutes + 2);
     result.sensorValues = sensor_data;
     return result;
 }
