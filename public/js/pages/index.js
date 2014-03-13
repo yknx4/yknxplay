@@ -11,16 +11,47 @@ $(document).ready(function () {
         var jData = JSON.parse(data);
         var fData = jData.sensordata;
         var values = new Array();
-
+        var avg = 0;
         for (var i = 0; i < fData.sensorValues.length; i++) {
             values[i] = (fData.sensorValues[i] / fData.count[i]) * (1 + .4 * i);
+            avg += values[i];
         }
+        avg /= fData.sensorValues.length;
+        console.log("average= " + avg);
         console.log(fData);
         console.log(JSON.stringify(values));
         $('#avgMChartContainer').dxBarGauge({
-            startValue: 0,
-            endValue: 9999,
+            startValue: avg / 2,
+            endValue: avg * 1.5,
             values: values,
+            label: {
+                indent: 30,
+                format: 'fixedPoint',
+                precision: 1,
+                customizeText: function (arg) {
+                    return arg.valueText + ' u';
+                }
+            },
+            title: {
+                text: "Water flow",
+                font: {
+                    size: 28
+                }
+            }
+        });
+        var valuesT = new Array();
+        var totalAvg = 0;
+        for (var i = 0; i < fData.sensorValues.length; i++) {
+            valuesT[i] = fData.sensorValues[i] * (1 + .4 * i);
+            totalAvg += valuesT[i];
+        }
+        totalAvg /= fData.sensorValues.length;
+        console.log(fData);
+        console.log(JSON.stringify(values));
+        $('#totalMChartContainer').dxBarGauge({
+            startValue: totalAvg / 2,
+            endValue: totalAvg * 1.5,
+            values: valuesT,
             label: {
                 indent: 30,
                 format: 'fixedPoint',

@@ -1,41 +1,41 @@
-<% extend 'layout.ect' %>
-<% count = 0 %>
-<% apiHelper = (item) -> %>
-	
-    <div class="panel panel-info">
-              <div class="panel-heading">
-                <h3 class="panel-title"><%- item.header %></h3>
-              </div>
-              <div class="panel-body">
-               <%- item.description %>
-               <br/>
-               <br/>
-               <a data-toggle="collapse" data-parent="#accordion" href="#collapseExample<%-count%>">
-               <button type="button" class="btn btn-primary btn-xs">Mostrar Ejemplo</button>
-          
-        </a>
-              </div><div id="collapseExample<%-count%>" class="panel-collapse collapse out">
-              <div class="panel-footer"><pre class="prettyprint lang-js"><%- item.example %></pre></div></div>
-            </div>
-            <% count++ %>
-<% end %>
-<div class="row">
-          <div class="col-lg-12">
-            <h1>JSON API <small>Get JSON Data from water flow.</small></h1>
-            <ol class="breadcrumb">
-              <li class="active"><i class="fa fa-files-o"></i> Api</li>
-            </ol>
-          </div>
-          
-          <% if @apiList?.length : %>
-	<div class="col-lg-12">
-		<% for item in @apiList : %>
-			<%- apiHelper item %>
-		<% end %>
-	</div>
-<% else : %>
-	<p>List is empty</p>
-<% end %>
-          
-        </div><!-- /.row -->
+  <% extend 'layout.ect' %>
+  <% count = 0 %>
+  <% apiHelper = (item) -> %>
+  
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <h3 class="panel-title"><%- item.header %></h3>
+    </div>
+    <div class="panel-body">
+     <%- item.description %>
+     <br/>
+     <br/>
+     <a data-toggle="collapse" data-parent="#accordion" href="#collapseExample<%-count%>">
+       <button type="button" class="btn btn-primary btn-xs">Mostrar Ejemplo</button>
+       
+     </a>
+   </div><div id="collapseExample<%-count%>" class="panel-collapse collapse out">
+   <div class="panel-footer"><pre class="prettyprint lang-js"><%- item.example %></pre></div></div>
+ </div>
+ <% count++ %>
+ <% end %>
+ <div class="row">
+  <div class="col-lg-12">
+    <h1>JSON API <small>Get JSON Data from water flow.</small></h1>
+    <ol class="breadcrumb">
+      <li class="active"><i class="fa fa-files-o"></i> Api</li>
+    </ol>
+  </div>
+  
+  <% if @apiList?.length : %>
+  <div class="col-lg-12">
+    <% for item in @apiList : %>
+    <%- apiHelper item %>
+    <% end %>
+  </div>
+  <% else : %>
+  <p>List is empty</p>
+  <% end %>
+  
+</div><!-- /.row -->
 
