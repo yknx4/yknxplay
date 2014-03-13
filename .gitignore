@@ -1,3 +1,8 @@
 /Sensor Simulator/clientsimulator.o
 /requests.txt
 /views/index.ejs
+*.stackdump
+/sed.exe.stackdump
+/server.js
+/tr.exe.stackdump
+/uname.exe.stackdump
