@@ -1,0 +1,14 @@
+exports.noOfSensors = 3;
+exports.msgSize = 5;
+exports.msg_len = exports.msgSize * exports.noOfSensors;
+exports.hash_size = 16;
+exports.secret_word = "S0*(dae{dse2";
+exports.dbName = "ucol_wflow";
+exports.collectionName = 'sensorData';
+exports.siteServer = 'mighty-gorge-2413.herokuapp.com';
+exports.sitePort = '80';
+exports.time = '1000';
+exports.dbName = "UCOL_WFLOW";
+exports.siteServer = '127.0.0.1';
+exports.sitePort = '3001';
+exports.time = '10';
