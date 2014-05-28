@@ -8,3 +8,5 @@
 /uname.exe.stackdump
 /.bin
 /.bin/*
+node_modules/.bin/ect
+node_modules/.bin/jade
