@@ -77,6 +77,7 @@ app.get('/sensor_data', function (req, res) {
 
 
 app.get('/sensor_data/create/:msg', sensor_data.create);
+app.get('/sensor_data/xcreate/:msg', sensor_data.xcreate);
 app.get('/sensor_data/:id', sensor_data.show);
 app.get('/sensor_data/from_date/:low/to_date/:high', sensor_data.showByDateRange);
 app.get('/sensor_data/year/:year/month/:month', sensor_data.showByMonthParsed);

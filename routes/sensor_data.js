@@ -439,3 +439,58 @@ exports.create = function (req, res) {
         });
     }
 }
+
+var initialDate = new Date(2014, 0, 1, 0, 0, 0, 0);
+exports.xcreate = function (req, res) {
+
+    var full_msg = req.params.msg
+
+    console.log("Input requested with following string: " + full_msg);
+    if (sensorDataHelper.validate(full_msg)) {
+        console.log("Valid Data");
+        //full_msg = full_msg.substring(vars.hash_size - 1, full_msg.length);
+        var newSensorData = sensorDataHelper.getSensorDataFromMsg(full_msg);
+        newSensorData.date = initialDate;
+        initialDate = new Date(initialDate.getTime() + 2 * 60000);
+
+        /*/DEBUG*/
+        var outputFilename = '/muestreo/' + getDateFileName() + '.json';
+
+        fs.writeFile(outputFilename, JSON.stringify(newSensorData, null, 4), function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("JSON saved to " + outputFilename);
+            }
+        });
+
+
+
+        ////////////////////////
+        //console.log(newSensorData);
+
+        newSensorData.save(function (err) {
+
+            if (!err) {
+                //fs.appendFile("mydata.txt", dateHelper.getDateTime() + full_msg + crlf, encoding = 'utf8', function (err) {}); //write the value to file and add CRLF for line break
+                res.json(201, {
+                    message: "sensorData created on: " +
+                        newSensorData.date
+                });
+            } else {
+                res.json(500, {
+                    message: "Could not create sensorData.Error: " + err
+                });
+            }
+
+        });
+
+
+
+    } else {
+        console.log("Invalid Data");
+        res.json(500, {
+            message: "Could not create sensorData: Invalid input string"
+        });
+    }
+}

@@ -6,6 +6,31 @@ var global_collection;
 var http = require('http');
 var crypto = require('crypto');
 var noSensors = 3;
+var initialDate = new Date(2014, 0, 1, 0, 0, 0, 0);
+
+function trunc(n) {
+    return n - n % 1;
+}
+
+cust_hash = function (seed, reads) {
+    console.log(reads);
+    var p1 = 67;
+    var p2 = 97;
+    var modulus = trunc(trunc((32767 / p2)) / vars.noOfSensors);
+    var resultado = 0;
+    for (var i = 0; i < vars.noOfSensors; i++) {
+        var tmpM = reads[i] % modulus;
+        resultado += tmpM * p2;
+
+    }
+    resultado /= p1;
+    resultado = trunc(resultado);
+    resultado = resultado / 2;
+    resultado = trunc(resultado);
+    resultado += (seed * p2) / p1;
+    resultado = trunc(resultado);
+    return resultado;
+}
 
 var crlf = new Buffer(2);
 crlf[0] = 0xD; //CR - Carriage return character
@@ -14,39 +39,164 @@ crlf[1] = 0xA; //LF - Line feed character
 /*
 
 */
-function padLeft(str, len, pad) {
-    pad = typeof pad === "undefined" ? "0" : pad + "";
-    str = str + "";
-    while (str.length < len) {
-        str = pad + str;
-    }
-    return str;
-}
+
+/**
+SENSOR 1 = BAÑO
+SENSOR 2 = COCINA
+SENSOR 3 = LAVADORA
+
+*/
+var banio = false;
+var cntBanio = 3;
+var lavadoraEncendida = false;
+var cntLavadora = 120;
+var banandose = false;
+var cntBanarse = 5;
+var lavarTrastes = false;
+var cntLavarTrs = 60;
+
+
+
 
 function generateData() {
     var res = "";
-    var str2hash = "";
     var ran = new Array();
-    for (var n = 0; n < vars.noOfSensors; n++) {
-        ran[n] = padLeft(Math.floor((((Math.random() * 9999) * (1 + .25 * n)) % 9999)), vars.msgSize - 1);
-        str2hash += n + "";
-        str2hash += ran[n] + "";
+    ran[0] = 0;
+    ran[1] = 0;
+    ran[2] = 0;
+    ///Probabilidad de ir al baño
+
+    if (banio) {
+        var rand = Math.random();
+        if (rand == 0)
+            if (Math.random() > .5) rand = 1;
+        ran[0] += Math.floor(rand * 40) + 28;
+        cntBanio--;
+        if (cntBanio <= 0) {
+            banio = false;
+            cntbanio = 3;
+        }
+    } else if (Math.random() > .99) banio = true;
+
+
+    var hour = initialDate.getHours();
+    switch (hour) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+        if (banandose) {
+            var rand = Math.random();
+            if (rand == 0)
+                if (Math.random() > .5) rand = 1;
+            ran[0] += Math.floor(rand * 864) + 288;
+            cntBanarse--;
+            if (cntBanarse <= 0) {
+                banandose = false;
+                cntBanarse = 5;
+            }
+        } else if (Math.random() > .98) banio = true;
+        break;
+    case 7:
+    case 8:
+    case 9:
+    case 10:
+        if (banio) {
+            var rand = Math.random();
+            if (rand == 0)
+                if (Math.random() > .5) rand = 1;
+            ran[0] += Math.floor(rand * 40) + 28;
+            cntBanio--;
+            if (cntBanio <= 0) {
+                banio = false;
+                cntbanio = 3;
+            }
+        } else if (Math.random() > .99) banio = true;
+        break;
+    case 11:
+    case 12:
+    case 13:
+    case 14:
+    case 15:
+        if (banio) {
+            var rand = Math.random();
+            if (rand == 0)
+                if (Math.random() > .5) rand = 1;
+            ran[0] += Math.floor(rand * 40) + 28;
+            cntBanio--;
+            if (cntBanio <= 0) {
+                banio = false;
+                cntbanio = 3;
+            }
+        } else if (Math.random() > .98) banio = true;
+        break;
+    case 16:
+    case 17:
+        if (banandose) {
+            var rand = Math.random();
+            if (rand == 0)
+                if (Math.random() > .5) rand = 1;
+            ran[0] += Math.floor(rand * 864) + 288;
+            cntBanarse--;
+            if (cntBanarse <= 0) {
+                banandose = false;
+                cntBanarse = 5;
+            }
+        } else if (Math.random() > .97) banio = true;
+        break;
+    case 18:
+    case 19:
+    case 20:
+        if (banio) {
+            var rand = Math.random();
+            if (rand == 0)
+                if (Math.random() > .5) rand = 1;
+            ran[0] += Math.floor(rand * 40) + 28;
+            cntBanio--;
+            if (cntBanio <= 0) {
+                banio = false;
+                cntbanio = 3;
+            }
+        } else if (Math.random() > .98) banio = true;
+        break;
+    case 21:
+    case 22:
+        if (banandose) {
+            var rand = Math.random();
+            if (rand == 0)
+                if (Math.random() > .5) rand = 1;
+            ran[0] += Math.floor(rand * 864) + 288;
+            cntBanarse--;
+            if (cntBanarse <= 0) {
+                banandose = false;
+                cntBanarse = 5;
+            }
+        } else if (Math.random() > .97) banio = true;
+        break;
+    case 23:
+        break;
     }
 
-    console.log("String to hash: " + str2hash);
-    var local_hash = crypto.createHash('md5').update(vars.secret_word + str2hash).digest('hex');
-    local_hash = local_hash.substring(0, vars.hash_size);
-    console.log("Local hash (md5): " + local_hash);
-    res = local_hash + str2hash;
-    console.log("Final message: " + res);
-    if(res.length!=vars.hash_size+vars.msg_len){
-    	res="0000000000000000"
+
+    var res = cust_hash(0, ran) + ";0";
+    for (var i = 0; i < vars.noOfSensors; i++) {
+        var tmpM = ran[i];
+        res += ";" + tmpM + "";
+
     }
 
+
+
+
+
+    initialDate = new Date(initialDate.getTime() + 2 * 60000);
     var options = {
         host: vars.siteServer,
         port: vars.sitePort,
-        path: '/sensor_data/create/' + res
+        path: '/sensor_data/xcreate/' + res
     };
 
     callback = function (response) {

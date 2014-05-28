@@ -4,6 +4,6 @@
 
 exports.index = function (req, res) {
     res.render('index', {
-        title: 'API JSON de los sensores'
+        title: 'Sensors JSON Api'
     });
 };
