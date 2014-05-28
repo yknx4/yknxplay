@@ -6,3 +6,5 @@
 /server.js
 /tr.exe.stackdump
 /uname.exe.stackdump
+/.bin
+/.bin/*
