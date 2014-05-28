@@ -9,6 +9,31 @@ crlf[0] = 0xD; //CR - Carriage return character
 crlf[1] = 0xA; //LF - Line feed character
 
 
+function getDateFileName() {
+
+    var date = new Date();
+
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
+
+    var min = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
+
+    var sec = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
+
+    var year = date.getFullYear();
+
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+
+    var day = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+
+    return year + "-" + month + "-" + day + " " + hour + "-" + min + "-";
+
+}
+
 function getDateRange(low, high, res) {
     console.log("Query between " + low + " and " + high);
     sensorData.find({
@@ -123,15 +148,15 @@ function parseDayData(high, dayData) {
             else v2 = vl;
             totalSensors[i] += v2;
 
-            if (typeof hoursData[valDate.getHours() ] == "undefined") {
-                hoursData[valDate.getHours() ] = newHourData(high,valDate.getHours());
+            if (typeof hoursData[valDate.getHours()] == "undefined") {
+                hoursData[valDate.getHours()] = newHourData(high, valDate.getHours());
                 console.log("Errora on: " + valDate.getHours());
                 console.log(hoursData.length);
             } else {
                 totalCount[i]++;
                 // console.log("Inserted on " + valDate.getDate() + " dia.");
-                hoursData[valDate.getHours() ].sensorValues[i] += parseInt(val.sensorValues[i]);
-                hoursData[valDate.getHours() ].count[i]++;
+                hoursData[valDate.getHours()].sensorValues[i] += parseInt(val.sensorValues[i]);
+                hoursData[valDate.getHours()].count[i]++;
             }
 
         }
@@ -370,8 +395,23 @@ exports.create = function (req, res) {
     console.log("Input requested with following string: " + full_msg);
     if (sensorDataHelper.validate(full_msg)) {
         console.log("Valid Data");
-        full_msg = full_msg.substring(vars.hash_size - 1, full_msg.length);
+        //full_msg = full_msg.substring(vars.hash_size - 1, full_msg.length);
         var newSensorData = sensorDataHelper.getSensorDataFromMsg(full_msg);
+
+        /*/DEBUG*/
+        var outputFilename = '/muestreo/' + getDateFileName() + '.json';
+
+        fs.writeFile(outputFilename, JSON.stringify(newSensorData, null, 4), function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("JSON saved to " + outputFilename);
+            }
+        });
+
+
+
+        ////////////////////////
         //console.log(newSensorData);
 
         newSensorData.save(function (err) {
@@ -393,7 +433,7 @@ exports.create = function (req, res) {
 
 
     } else {
-        console.log("Inalid Data");
+        console.log("Invalid Data");
         res.json(500, {
             message: "Could not create sensorData: Invalid input string"
         });

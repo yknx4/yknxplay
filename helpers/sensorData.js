@@ -1,16 +1,53 @@
 var vars = require("../global_var");
 var crypto = require('crypto');
 var sensorData = require('../models/sensorData').SensorData;
+var key = "JORGJORGJORGJORG";
+
+function trunc(n) {
+    return n - n % 1;
+}
+
+cust_hash = function (seed, reads) {
+    console.log(reads);
+    var p1 = 67;
+    var p2 = 97;
+    var modulus = trunc(trunc((32767 / p2)) / vars.noOfSensors);
+    var resultado = 0;
+    for (var i = 0; i < vars.noOfSensors; i++) {
+        var tmpM = reads[i] % modulus;
+        resultado += tmpM * p2;
+
+    }
+    resultado /= p1;
+    resultado = trunc(resultado);
+    resultado = resultado / 2;
+    resultado = trunc(resultado);
+    resultado += (seed * p2) / p1;
+    resultado = trunc(resultado);
+    return resultado;
+}
+
+
 exports.validate = function (full_msg) {
-    var hash = full_msg.substring(0, vars.hash_size);
-    var sensors_msg = full_msg.substring(vars.hash_size, vars.hash_size + vars.msg_len);
-    console.log("Remote hash (md5): " + hash);
-    var string2hash = vars.secret_word + sensors_msg;
-    var local_hash = crypto.createHash('md5').update(string2hash).digest('hex');
-    local_hash = local_hash.substring(0, vars.hash_size);
-    console.log("Local hash (md5): " + local_hash);
+    //    var oriSeed = String.fromCharCode(27);
+    var reads = [];
+    var oriSeed = 27;
+    var args = full_msg.split(";");
+    console.log("Args: " + args);
+    var hash = parseInt(args[0], 16);
+    console.log("Remote Hash: " + hash);
+    var rndSeed = parseInt(args[1], 16);
+    console.log("rndSeed: " + rndSeed);
+    for (var i = 2; i < vars.noOfSensors + 2; i++) {
+        var tVal = parseInt(args[i], 16);
+        console.log("s Value " + (i - 2) + " :" + rndSeed);
+        reads.push(tVal);
+    }
+    var local_hash = cust_hash(rndSeed, reads);
+    console.log("Local hash: " + local_hash);
     if (local_hash == hash) {
         console.log("Valid Data!");
+        //return true;
         return true;
 
     } else {
@@ -22,12 +59,10 @@ exports.validate = function (full_msg) {
 exports.getSensorDataFromMsg = function (full_msg) {
     var result = new sensorData();
     var sensor_data = new Array();
-    for (var i = 0; i < vars.noOfSensors; i++) {
-        var start = (2 + vars.msgSize * i);
-        var end = 1 + vars.msgSize + vars.msgSize * i;
-        //console.log('from ' + start + ' to ' + end);
-        var sensor_msg = full_msg.substring(start, end);
-        sensor_data[i] = parseInt(sensor_msg);
+    var args = full_msg.split(";");
+    for (var i = 2; i < vars.noOfSensors + 2; i++) {
+        var tVal = parseInt(args[i], 16);
+        sensor_data.push(tVal);
     }
     //    result.date = new Date();
     /*This will be just for randomizing*/
