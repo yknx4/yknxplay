@@ -40,7 +40,7 @@ exports.validate = function (full_msg) {
     console.log("rndSeed: " + rndSeed);
     for (var i = 2; i < vars.noOfSensors + 2; i++) {
         var tVal = parseInt(args[i], 16);
-        console.log("s Value " + (i - 2) + " :" + rndSeed);
+        console.log("s Value " + (i - 2) + " :" + tVal);
         reads.push(tVal);
     }
     var local_hash = cust_hash(rndSeed, reads);

@@ -10,6 +10,7 @@
 
   <!-- Bootstrap core CSS -->
   <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/datepicker.css" rel="stylesheet">
 
   <!-- Add custom CSS here -->
   <link href="/css/sb-admin.css" rel="stylesheet">
@@ -30,8 +31,10 @@
   </div><!-- /#wrapper -->
 
   <!-- JavaScript -->
+    <script src="/js/default.js"></script>
   <script src="/js/jquery-1.10.2.js"></script>
   <script src="/js/bootstrap.js"></script>
+    
   
   <script src="/js/coffee-script.js"></script>
   <script src="/js/ect.min.js"></script>
@@ -45,6 +48,7 @@
   <% for item in @js : %>
   <script src="<%- item %>"></script>
   <% end %>
+    <script src="/js/bootstrap-datepicker.js"></script>      
   <script>
     !function ($) {
       $(function(){

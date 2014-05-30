@@ -16,11 +16,6 @@
          "url": "/stats",
          "class": "fa fa-bar-chart-o",
          "file": "stats"
-        },
-     {
-         "name": "Charts (Legacy)",
-         "url": "/charts.html",
-         "class": "fa fa-bar-chart-o",
-         "file": ""
         }
+
  ]

@@ -46,19 +46,40 @@ SENSOR 2 = COCINA
 SENSOR 3 = LAVADORA
 
 */
-var banio = false;
-var cntBanio = 3;
-var lavadoraEncendida = false;
-var cntLavadora = 120;
-var banandose = false;
-var cntBanarse = 5;
-var lavarTrastes = false;
-var cntLavarTrs = 60;
 
 
+function generateRandom(hour, sensor) {
+    if (sensor > 3 || sensor < 1) return 0;
+    if (hour > 23 || hour < 0) return 0;
+    sensor = sensor - 1;
+    var avg_s = [4.8 * .6, 4.8 * 2.0, 4.8 * .9];
+
+    var p_s = []
+    var p_s0 = [3, 5, 5, 3, 3, 3, 25, 20, 15, 10, 5, 5, 5, 10, 15, 15, 20, 5, 3, 3, 15, 20, 25, 25];
+    var p_s1 = [2, 2, 0, 0, 0, 0, 5, 15, 10, 20, 5, 1, 1, 15, 10, 50, 60, 25, 10, 5, 10, 3, 3, 3];
+    var p_s2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 45, 45, 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    p_s[0] = p_s0;
+    p_s[1] = p_s1;
+    p_s[2] = p_s2;
+    var prob = p_s[sensor][hour];
+    prob /= 100;
+    var rnd = Math.random();
+    if (rnd < prob) {
+
+        var val = Math.ceil(avg_s[sensor] * (1 + 2 * Math.random() - Math.random()));
+        return val;
+
+    }
+    return 0;
+
+}
 
 
 function generateData() {
+    var tD = new Date();
+    if (initialDate > tD) return;
+    console.log();
+    console.log(initialDate);
     var res = "";
     var ran = new Array();
     ran[0] = 0;
@@ -66,125 +87,20 @@ function generateData() {
     ran[2] = 0;
     ///Probabilidad de ir al baño
 
-    if (banio) {
-        var rand = Math.random();
-        if (rand == 0)
-            if (Math.random() > .5) rand = 1;
-        ran[0] += Math.floor(rand * 40) + 28;
-        cntBanio--;
-        if (cntBanio <= 0) {
-            banio = false;
-            cntbanio = 3;
-        }
-    } else if (Math.random() > .99) banio = true;
 
 
     var hour = initialDate.getHours();
-    switch (hour) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 5:
-    case 6:
-        if (banandose) {
-            var rand = Math.random();
-            if (rand == 0)
-                if (Math.random() > .5) rand = 1;
-            ran[0] += Math.floor(rand * 864) + 288;
-            cntBanarse--;
-            if (cntBanarse <= 0) {
-                banandose = false;
-                cntBanarse = 5;
-            }
-        } else if (Math.random() > .98) banio = true;
-        break;
-    case 7:
-    case 8:
-    case 9:
-    case 10:
-        if (banio) {
-            var rand = Math.random();
-            if (rand == 0)
-                if (Math.random() > .5) rand = 1;
-            ran[0] += Math.floor(rand * 40) + 28;
-            cntBanio--;
-            if (cntBanio <= 0) {
-                banio = false;
-                cntbanio = 3;
-            }
-        } else if (Math.random() > .99) banio = true;
-        break;
-    case 11:
-    case 12:
-    case 13:
-    case 14:
-    case 15:
-        if (banio) {
-            var rand = Math.random();
-            if (rand == 0)
-                if (Math.random() > .5) rand = 1;
-            ran[0] += Math.floor(rand * 40) + 28;
-            cntBanio--;
-            if (cntBanio <= 0) {
-                banio = false;
-                cntbanio = 3;
-            }
-        } else if (Math.random() > .98) banio = true;
-        break;
-    case 16:
-    case 17:
-        if (banandose) {
-            var rand = Math.random();
-            if (rand == 0)
-                if (Math.random() > .5) rand = 1;
-            ran[0] += Math.floor(rand * 864) + 288;
-            cntBanarse--;
-            if (cntBanarse <= 0) {
-                banandose = false;
-                cntBanarse = 5;
-            }
-        } else if (Math.random() > .97) banio = true;
-        break;
-    case 18:
-    case 19:
-    case 20:
-        if (banio) {
-            var rand = Math.random();
-            if (rand == 0)
-                if (Math.random() > .5) rand = 1;
-            ran[0] += Math.floor(rand * 40) + 28;
-            cntBanio--;
-            if (cntBanio <= 0) {
-                banio = false;
-                cntbanio = 3;
-            }
-        } else if (Math.random() > .98) banio = true;
-        break;
-    case 21:
-    case 22:
-        if (banandose) {
-            var rand = Math.random();
-            if (rand == 0)
-                if (Math.random() > .5) rand = 1;
-            ran[0] += Math.floor(rand * 864) + 288;
-            cntBanarse--;
-            if (cntBanarse <= 0) {
-                banandose = false;
-                cntBanarse = 5;
-            }
-        } else if (Math.random() > .97) banio = true;
-        break;
-    case 23:
-        break;
-    }
+    ran[0] = generateRandom(hour, 1);
+    ran[1] = generateRandom(hour, 2);
+    ran[2] = generateRandom(hour, 3);
+    //console.log(ran);
 
 
-    var res = cust_hash(0, ran) + ";0";
+
+    var res = cust_hash(1, ran).toString(16) + ";1";
     for (var i = 0; i < vars.noOfSensors; i++) {
         var tmpM = ran[i];
-        res += ";" + tmpM + "";
+        res += ";" + tmpM.toString(16) + "";
 
     }
 
@@ -214,6 +130,7 @@ function generateData() {
     }
 
     http.request(options, callback).end();
+    // console.log('/sensor_data/xcreate/' + res);
 }
 
 function getDateTime() {

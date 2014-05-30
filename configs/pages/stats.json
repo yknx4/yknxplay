@@ -1,6 +1,6 @@
 {
     "title": "Statistics",
-    "page_file": "index.ect",
+    "page_file": "stats.ect",
     "active": "Stats",
     "js": [
         "http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js",
@@ -9,7 +9,8 @@
         "http://cdn3.devexpress.com/jslib/13.2.7/js/dx.chartjs.js",
         "http://cdn3.devexpress.com/jslib/13.2.7/js/dx.all.js",
         "/js/date/date.js",
-        "/js/pages/index.js"
+        "/js/pages/index.js",
+        "/js/pages/stats.js"
         ],
     "css": [
         ]

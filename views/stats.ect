@@ -1,15 +1,21 @@
 <% extend 'layout.ect' %>
 <div class="row">
   <div class="col-lg-12">
-    <h1>Home <small>Statistics overview</small></h1>
+    <h1>Stats <small>Statistics overview</small></h1>
     <ol class="breadcrumb">
-      <li class="active"><i class="fa fa-home"></i> Home</li>
+      <li class="active"><i class="fa fa-home"></i> Statistics</li>
+                
     </ol>
-    <!---
-    <div class="alert alert-success alert-dismissable">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-      Welcome to SB Admin by <a class="alert-link" href="http://startbootstrap.com">Start Bootstrap</a>! Feel free to use this template for your admin needs! We are using a few different plugins to handle the dynamic tables and charts, so make sure you check out the necessary documentation links provided.
-    </div>---->
+    
+    <div class="alert alert-success ">
+        <h4>Date:</h4>
+        </br>
+        
+      <div class="input-append date" id="dp3"  data-date-format="dd/mm/yyyy">
+				<input class="span2" size="16" type="text"  readonly="">
+				<span class="add-on"><i class="icon-th"></i></span>
+			  </div>
+    </div>
   </div>
 </div><!-- /.row -->
 <!--
@@ -177,7 +183,7 @@
           <div class="col-lg-4">
             <div class="panel panel-primary">
               <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Today average</h3>
+                <h3 class="panel-title"><i class="fa fa-long-arrow-right"></i> Day average: <span class="dayAvgTxt"></h3>
               </div>
               <div class="panel-body">
                 <div id="thisDayAvgChart"></div>
