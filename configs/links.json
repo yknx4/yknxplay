@@ -16,6 +16,12 @@
          "url": "/stats",
          "class": "fa fa-bar-chart-o",
          "file": "stats"
+        },
+     {
+         "name": "Runs",
+         "url": "/runs",
+         "class": "fa fa-check",
+         "file": "runs"
         }
 
  ]
