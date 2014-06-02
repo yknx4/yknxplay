@@ -14,19 +14,19 @@ function flowInLitersPerMinute(reads, count) {
     return ((reads / (count * 2))) / cQ;
 }
 
-function calculateRuns(avg, reads, count) {
+function calculateRuns(avg, reads) {
+    //console.log("read: " + reads + " avg:" + avg);
     if (reads > avg)
         return 1;
-    return 0;
+    return -1;
 
 }
 
-function calculateRunswA(reads, count) {
-    if (reads / count > 1)
-        return 1;
-    return 0;
-
+function toDate(vDate) {
+    var tmpD = new Date(vDate * 60000);
+    return tmpD.toLocaleTimeString();
 }
+
 
 $(document).ready(function () {
 
@@ -58,44 +58,72 @@ $(document).ready(function () {
 
 
 
-    $.get("/sensor_data/year/" + year + "/month/" + month + '/day/' + day, {}, function (data) {
+    //$.get("/sensor_data/year/" + year + "/month/" + month + '/day/' + day, {}, function (data) {
+    $.get("/sensor_data/from_date/" + year + "-" + month + "-" + day + "-0-0-0" + "/to_date/" + year + "-" + month + '-' + day + "-23-59-59", {}, function (data) {
+        //http://127.0.0.1:3001/sensor_data/from_date/2014-5-29-0-0-0/to_date/2014-5-29-23-59-59
         ////thisDayAvgChart
+
         var dateString = date.toString("MMMM") + " " + (date.getDate()) + ", " + date.getFullYear();
         $(".lastDayText").html(dateString);
         var jData = JSON.parse(data);
+        console.log(jData);
         var fData = jData.sensordata;
+        console.log(fData);
         var values = new Array();
 
 
 
-        for (var i = 0; i < fData.sensorValues.length; i++) {
+        /*for (var i = 0; i < fData.length; i++) {
             values[i] = calculateRuns(fData.sensorValues[i], fData.count[i]);
-        }
+        }*/
         console.log(fData);
-        console.log(JSON.stringify(values));
+        // console.log(JSON.stringify(values));
 
         /*OTHER CHART*/
-        var hoursData = fData.hours;
+        var hoursData = fData;
         var fDataC = new Array();
         var tmpDate = new Date();
+        var avg = 0;
+        var cnt = 0;
+        fData.forEach(function (val, index, arr) {
+            avg += (val.sensorValues[0] + val.sensorValues[1] + val.sensorValues[2]);
+            cnt += 3;
+        });
+        avg /= cnt;
 
-        hoursData.forEach(function (val, index, arr) {
+        var hCount = 0;
+        var lastZero = false;
+        fData.forEach(function (val, index, arr) {
 
-
+            //console.log(val);
             //if (index > tmpDate.getHours()) return;
             //console.log("Hour: " + index);
-            var vDate = index + 1;
-            var avg = (calculateRunswA(val.sensorValues[0], val.count[0]) + calculateRunswA(val.sensorValues[1], val.count[1]) + calculateRunswA(val.sensorValues[2], val.count[2])) / 3;
+            var vDate = index * 2;
+            if ((index + 0) % 30 == 0) hCount++;
 
-            fDataC.push({
-                year: JSON.stringify(vDate),
-                s0: calculateRuns(avg, val.sensorValues[0], val.count[0]),
-                s1: calculateRuns(avg, val.sensorValues[1], val.count[1]),
-                s2: calculateRuns(avg, val.sensorValues[2], val.count[2]),
-                avg: avg
-            });
+            //console.log(avg);
+            tmpDate = new Date(Date.parse(val.Date));
+            //console.log(tmpDate);
+            // console.log(hCount + ":" + vDate % 60);
+            var s = calculateRuns(avg, val.sensorValues[0]) + calculateRuns(avg, val.sensorValues[1]) + calculateRuns(avg, val.sensorValues[2]);
+            if (s > 0) console.log(s);
+
+
+            if (!lastZero)
+                fDataC.push({
+                    //year: vDate + " minutes",
+                    year: toDate(vDate),
+                    s0: calculateRuns(avg, val.sensorValues[0]),
+                    s1: calculateRuns(avg, val.sensorValues[1]),
+                    s2: calculateRuns(avg, val.sensorValues[2]),
+                    avg: 0.1
+                });
+
+            if (s < 1) lastZero = true;
+            else lastZero = false;
+
         });
-
+        console.log(fDataC);
         $("#flowLastDayChartContainer").dxChart({
             dataSource: fDataC,
             commonSeriesSettings: {
