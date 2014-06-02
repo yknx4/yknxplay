@@ -23,7 +23,8 @@ function calculateRuns(avg, reads) {
 }
 
 function toDate(vDate) {
-    var tmpD = new Date(vDate * 60000);
+    //var tmpD = new Date(vDate * 60000);
+    var tmpD = vDate;
     return tmpD.toLocaleTimeString();
 }
 
@@ -76,7 +77,7 @@ $(document).ready(function () {
         /*for (var i = 0; i < fData.length; i++) {
             values[i] = calculateRuns(fData.sensorValues[i], fData.count[i]);
         }*/
-        console.log(fData);
+        //console.log(fData);
         // console.log(JSON.stringify(values));
 
         /*OTHER CHART*/
@@ -102,29 +103,29 @@ $(document).ready(function () {
             if ((index + 0) % 30 == 0) hCount++;
 
             //console.log(avg);
-            tmpDate = new Date(Date.parse(val.Date));
+            tmpDate = new Date(val.date);
             //console.log(tmpDate);
             // console.log(hCount + ":" + vDate % 60);
             var s = calculateRuns(avg, val.sensorValues[0]) + calculateRuns(avg, val.sensorValues[1]) + calculateRuns(avg, val.sensorValues[2]);
-            if (s > 0) console.log(s);
-
-
-            if (!lastZero)
-                fDataC.push({
-                    //year: vDate + " minutes",
-                    year: toDate(vDate),
-                    s0: calculateRuns(avg, val.sensorValues[0]),
-                    s1: calculateRuns(avg, val.sensorValues[1]),
-                    s2: calculateRuns(avg, val.sensorValues[2]),
-                    avg: 0.1
-                });
-
-            if (s < 1) lastZero = true;
+            //if (s < 0) console.log(s);
+            if (s != -3) lastZero = true;
             else lastZero = false;
+            //if (lastZero)
+            fDataC.push({
+                //year: vDate + " minutes",
+                year: toDate(tmpDate),
+                s0: calculateRuns(avg, val.sensorValues[0]),
+                s1: calculateRuns(avg, val.sensorValues[1]),
+                s2: calculateRuns(avg, val.sensorValues[2]),
+                avg: 0.1
+            });
+
+
+            //if (s < 0) console.log(s + " last0:" + lastZero);
 
         });
         console.log(fDataC);
-        $("#flowLastDayChartContainer").dxChart({
+        $("#runTest1").dxChart({
             dataSource: fDataC,
             commonSeriesSettings: {
                 type: "spline",
@@ -140,10 +141,80 @@ $(document).ready(function () {
                     valueField: "s0",
                     name: "S1"
                 },
+
+                {
+                    valueField: "avg",
+                    name: "Average",
+                    type: 'splinearea'
+                }
+    ],
+            tooltip: {
+                enabled: true
+            },
+            legend: {
+                verticalAlignment: "bottom",
+                horizontalAlignment: "center"
+            },
+            title: "Runs Test",
+            commonPaneSettings: {
+                border: {
+                    visible: true,
+                    bottom: false
+                }
+            }
+        });
+        $("#runTest2").dxChart({
+            dataSource: fDataC,
+            commonSeriesSettings: {
+                type: "spline",
+                argumentField: "year"
+            },
+            commonAxisSettings: {
+                grid: {
+                    visible: true
+                }
+            },
+            series: [
+
                 {
                     valueField: "s1",
                     name: "S2"
                 },
+
+                {
+                    valueField: "avg",
+                    name: "Average",
+                    type: 'splinearea'
+                }
+    ],
+            tooltip: {
+                enabled: true
+            },
+            legend: {
+                verticalAlignment: "bottom",
+                horizontalAlignment: "center"
+            },
+            title: "Runs Test",
+            commonPaneSettings: {
+                border: {
+                    visible: true,
+                    bottom: false
+                }
+            }
+        });
+        $("#runTest3").dxChart({
+            dataSource: fDataC,
+            commonSeriesSettings: {
+                type: "spline",
+                argumentField: "year"
+            },
+            commonAxisSettings: {
+                grid: {
+                    visible: true
+                }
+            },
+            series: [
+
                 {
                     valueField: "s2",
                     name: "S3"
@@ -169,7 +240,6 @@ $(document).ready(function () {
                 }
             }
         });
-
 
 
 
